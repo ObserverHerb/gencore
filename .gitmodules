@@ -1,0 +1,12 @@
+[submodule "SDL"]
+	path = SDL
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "WavPack"]
+	path = WavPack
+	url = https://github.com/dbry/WavPack.git
+[submodule "SDL_image"]
+	path = SDL_image
+	url = https://github.com/libsdl-org/SDL_image.git
+[submodule "jsoncpp"]
+	path = jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp.git
