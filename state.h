@@ -25,4 +25,5 @@ public:
 	void Present() override;
 protected:
 	Player player;
+	Asteroid asteroid;
 };

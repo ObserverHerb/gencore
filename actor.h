@@ -47,3 +47,15 @@ protected:
 	std::chrono::time_point<std::chrono::steady_clock> pitchLastUpdateTime;
 	std::chrono::duration<long long,std::nano> pitchTimeElapsed;
 };
+
+class Asteroid : public Actor
+{
+public:
+	Asteroid(const State *state);
+	void Update() override;
+	void Draw() override;
+protected:
+	std::vector<SDL_Texture*>::const_iterator currentFrame;
+	std::chrono::time_point<std::chrono::steady_clock> frameLastUpdateTime;
+	std::chrono::duration<long long,std::nano> frameTimeElapsed;
+};

@@ -21,16 +21,18 @@ const Keys& State::Keys() const
 	return keys;
 }
 
-TestState::TestState() : State(), player(this)
+TestState::TestState() : State(), player(this), asteroid(this)
 {
 }
 
 void TestState::Update()
 {
 	player.Update();
+	asteroid.Update();
 }
 
 void TestState::Present()
 {
 	player.Draw();
+	asteroid.Draw();
 }

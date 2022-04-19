@@ -116,12 +116,41 @@ void Player::Draw()
 		break;
 	}
 	SDL_Point size;
-	SDL_QueryTexture(currentTexture->Fetch(),NULL,NULL,&size.x, &size.y);
+	SDL_QueryTexture(currentTexture->Fetch().front(),NULL,NULL,&size.x, &size.y);
 	size.x*=3; // TODO: restore original size in production
 	size.y*=3;
 	int width=0;
 	int height=0;
 	SDL_GetRendererOutputSize(renderer,&width,&height);
 	SDL_Rect destinationRect({width/2-size.x/2,height/2-size.y/2,size.x,size.y});
-	SDL_RenderCopyEx(renderer,currentTexture->Fetch(),nullptr,&destinationRect,angle,nullptr,SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer,currentTexture->Fetch().front(),nullptr,&destinationRect,angle,nullptr,SDL_FLIP_NONE);
+}
+
+Asteroid::Asteroid(const State *state) : Actor("DatBoi Asteroid",state), currentFrame(nullptr)
+{
+	currentFrame=texture.Fetch().begin();
+	frameLastUpdateTime=std::chrono::steady_clock::now();
+	frameTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
+}
+
+void Asteroid::Update()
+{
+	if (frameTimeElapsed > std::chrono::seconds(1))
+	{
+		if (++currentFrame == texture.Fetch().end()) currentFrame=texture.Fetch().begin();
+		frameLastUpdateTime=std::chrono::steady_clock::now();
+	}
+	frameTimeElapsed=std::chrono::steady_clock::now()-frameLastUpdateTime;
+}
+
+void Asteroid::Draw()
+{
+	SDL_Point size;
+	SDL_QueryTexture(*currentFrame,NULL,NULL,&size.x, &size.y);
+	int x=50-size.x/2;
+	int y=50-size.y/2;
+	size.x*=5; // TODO: restore original size in production
+	size.y*=5;
+	SDL_Rect destinationRect({x,y,size.x,size.y});
+	SDL_RenderCopyEx(renderer,*currentFrame,nullptr,&destinationRect,0,nullptr,SDL_FLIP_NONE);
 }
