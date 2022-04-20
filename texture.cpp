@@ -43,3 +43,41 @@ const std::vector<SDL_Texture*>& Texture::Fetch() const
 
 std::unordered_map<std::string,std::vector<SDL_Texture*>> Texture::cache;
 Json::Value Texture::filenames;
+
+namespace Animation
+{
+	Adapter::Adapter::Adapter(const Frames& frames, const Animation::Interval& interval) : frames(frames), interval(interval)
+	{
+		currentForward=frames.cbegin();
+		currentReverse=frames.crbegin();
+	}
+
+	SDL_Texture* PingPongAdapter::operator()()
+	{
+		Interval elapsed=std::chrono::steady_clock::now()-lastUpdate;
+		Frames::const_iterator nextForward=std::next(currentForward);
+		Frames::const_reverse_iterator nextReverse=std::next(currentReverse);
+		if (elapsed > interval)
+		{
+			if (nextForward == frames.cend())
+			{
+				if (nextReverse == frames.crend())
+				{
+					currentForward=frames.cbegin();
+					currentReverse=frames.crbegin();
+				}
+				else
+				{
+					currentReverse++;
+				}
+			}
+			else
+			{
+				currentForward++;
+			}
+			lastUpdate=std::chrono::steady_clock::now();
+		}
+
+		return nextForward == frames.cend() ? *currentReverse : *currentForward;
+	}
+}

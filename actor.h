@@ -5,13 +5,6 @@
 
 class State;
 
-enum class AnimationMethod
-{
-	STATIC,
-	CYCLE,
-	PINGPONG
-};
-
 class Actor
 {
 public:
@@ -21,12 +14,6 @@ public:
 protected:
 	Texture texture;
 	const State *state;
-	std::vector<SDL_Texture*>::const_iterator currentFrame;
-	std::vector<SDL_Texture*>::const_reverse_iterator currentFrameReversed;
-	std::chrono::time_point<std::chrono::steady_clock> frameLastUpdateTime;
-	std::chrono::duration<long long,std::nano> frameTimeElapsed;
-	AnimationMethod animationMethod;
-	bool animationForward;
 };
 
 enum class Roll
@@ -63,7 +50,9 @@ protected:
 class Asteroid : public Actor
 {
 public:
-	Asteroid(const State *state);
+	   Asteroid(const State* state);
 	void Update() override;
 	void Draw() override;
+protected:
+	Animation::PingPongAdapter pingPongTexture;
 };

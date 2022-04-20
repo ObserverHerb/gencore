@@ -2,12 +2,8 @@
 #include "actor.h"
 #include "state.h"
 
-Actor::Actor(const std::string &textureName,const State *state) : texture(textureName), state(state), animationForward(true)
+Actor::Actor(const std::string &textureName,const State *state) : texture(textureName), state(state)
 {
-	currentFrame=texture.Fetch().begin();
-	currentFrameReversed=texture.Fetch().rbegin();
-	frameLastUpdateTime=std::chrono::steady_clock::now();
-	frameTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
 }
 
 Player::Player(const State *state) : Actor("Player Ship",state),
@@ -26,7 +22,7 @@ Player::Player(const State *state) : Actor("Player Ship",state),
 
 void Player::DetermineRoll()
 {
-	if (!state->Keys().at(SDLK_RIGHT) && !state->Keys().at(SDLK_LEFT) || state->Keys().at(SDLK_RIGHT) && state->Keys().at(SDLK_LEFT))
+	if ((!state->Keys().at(SDLK_RIGHT) && !state->Keys().at(SDLK_LEFT)) || (state->Keys().at(SDLK_RIGHT) && state->Keys().at(SDLK_LEFT)))
 	{
 		rollTimeElapsed=std::chrono::duration<long long>::zero();
 		pitchTimeElapsed=std::chrono::duration<long long>::zero();
@@ -134,39 +130,17 @@ void Player::Draw()
 	SDL_RenderCopyEx(renderer,currentTexture->Fetch().front(),nullptr,&destinationRect,angle,nullptr,SDL_FLIP_NONE);
 }
 
-Asteroid::Asteroid(const State *state) : Actor("DatBoi Asteroid",state)
+Asteroid::Asteroid(const State *state) : Actor("DatBoi Asteroid",state), pingPongTexture(texture.Fetch(),std::chrono::milliseconds(500))
 {
-	animationMethod=AnimationMethod::PINGPONG;
 }
 
 void Asteroid::Update()
 {
-	if (frameTimeElapsed > std::chrono::milliseconds(500))
-	{
-		if (std::next(currentFrame) == texture.Fetch().end())
-		{
-			if (std::next(currentFrameReversed) == texture.Fetch().rend())
-			{
-				currentFrame=texture.Fetch().begin();
-				currentFrameReversed=texture.Fetch().rbegin();
-			}
-			else
-			{
-				currentFrameReversed++;
-			}
-		}
-		else
-		{
-			currentFrame++;
-		}
-		frameLastUpdateTime=std::chrono::steady_clock::now();
-	}
-	frameTimeElapsed=std::chrono::steady_clock::now()-frameLastUpdateTime;
 }
 
 void Asteroid::Draw()
 {
-	SDL_Texture *frame=std::next(currentFrame) == texture.Fetch().end() ? *currentFrameReversed : *currentFrame;
+	SDL_Texture *frame=pingPongTexture();
 	SDL_Point size;
 	SDL_QueryTexture(frame,NULL,NULL,&size.x, &size.y);
 	int x=50-size.x/2;
