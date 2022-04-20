@@ -32,23 +32,24 @@ namespace Animation
 		virtual SDL_Texture* operator()()=0;
 	protected:
 		const Frames &frames;
-		Frames::const_iterator currentForward;
-		Frames::const_reverse_iterator currentReverse;
+		Frames::const_iterator current;
 		Timestamp lastUpdate;
 		Interval interval;
 	};
 
-	/*class LoopAdapter : public Adapter
+	class LoopAdapter : public Adapter
 	{
 	public:
 		LoopAdapter(const Frames &frames,const Interval &interval) : Adapter(frames,interval) { }
 		SDL_Texture* operator()();
-	};*/
+	};
 
 	class PingPongAdapter : public Adapter
 	{
 	public:
-		PingPongAdapter(const Frames &frames,const Interval &interval) : Adapter(frames,interval) { }
+		PingPongAdapter(const Frames &frames,const Interval &interval);
 		SDL_Texture* operator()();
+	protected:
+		Frames::const_reverse_iterator currentReverse;
 	};
 }

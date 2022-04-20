@@ -48,14 +48,30 @@ namespace Animation
 {
 	Adapter::Adapter::Adapter(const Frames& frames, const Animation::Interval& interval) : frames(frames), interval(interval)
 	{
-		currentForward=frames.cbegin();
+		current=frames.cbegin();
+	}
+
+	SDL_Texture* LoopAdapter::operator()()
+	{
+		Interval elapsed=std::chrono::steady_clock::now()-lastUpdate;
+		if (elapsed > interval)
+		{
+			if (++current == frames.cend()) current=frames.cbegin();
+			lastUpdate=std::chrono::steady_clock::now();
+		}
+
+		return *current;
+	}
+
+	PingPongAdapter::PingPongAdapter(const Frames &frames,const Interval &interval) : Adapter(frames,interval)
+	{
 		currentReverse=frames.crbegin();
 	}
 
 	SDL_Texture* PingPongAdapter::operator()()
 	{
 		Interval elapsed=std::chrono::steady_clock::now()-lastUpdate;
-		Frames::const_iterator nextForward=std::next(currentForward);
+		Frames::const_iterator nextForward=std::next(current);
 		Frames::const_reverse_iterator nextReverse=std::next(currentReverse);
 		if (elapsed > interval)
 		{
@@ -63,7 +79,7 @@ namespace Animation
 			{
 				if (nextReverse == frames.crend())
 				{
-					currentForward=frames.cbegin();
+					current=frames.cbegin();
 					currentReverse=frames.crbegin();
 				}
 				else
@@ -73,11 +89,11 @@ namespace Animation
 			}
 			else
 			{
-				currentForward++;
+				current++;
 			}
 			lastUpdate=std::chrono::steady_clock::now();
 		}
 
-		return nextForward == frames.cend() ? *currentReverse : *currentForward;
+		return nextForward == frames.cend() ? *currentReverse : *current;
 	}
 }

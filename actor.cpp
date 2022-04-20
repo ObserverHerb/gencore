@@ -130,7 +130,7 @@ void Player::Draw()
 	SDL_RenderCopyEx(renderer,currentTexture->Fetch().front(),nullptr,&destinationRect,angle,nullptr,SDL_FLIP_NONE);
 }
 
-Asteroid::Asteroid(const State *state) : Actor("DatBoi Asteroid",state), pingPongTexture(texture.Fetch(),std::chrono::milliseconds(500))
+Asteroid::Asteroid(const State *state) : Actor("DatBoi Asteroid",state), pingPongTexture(texture.Fetch(),std::chrono::milliseconds(200))
 {
 }
 
