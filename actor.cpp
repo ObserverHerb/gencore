@@ -2,6 +2,14 @@
 #include "actor.h"
 #include "state.h"
 
+Actor::Actor(const std::string &textureName,const State *state) : texture(textureName), state(state), animationForward(true)
+{
+	currentFrame=texture.Fetch().begin();
+	currentFrameReversed=texture.Fetch().rbegin();
+	frameLastUpdateTime=std::chrono::steady_clock::now();
+	frameTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
+}
+
 Player::Player(const State *state) : Actor("Player Ship",state),
 	texture_half_roll_right("Player Ship Half Roll Right"),
 	texture_full_roll_right("Player Ship Full Roll Right"),
@@ -126,18 +134,31 @@ void Player::Draw()
 	SDL_RenderCopyEx(renderer,currentTexture->Fetch().front(),nullptr,&destinationRect,angle,nullptr,SDL_FLIP_NONE);
 }
 
-Asteroid::Asteroid(const State *state) : Actor("DatBoi Asteroid",state), currentFrame(nullptr)
+Asteroid::Asteroid(const State *state) : Actor("DatBoi Asteroid",state)
 {
-	currentFrame=texture.Fetch().begin();
-	frameLastUpdateTime=std::chrono::steady_clock::now();
-	frameTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
+	animationMethod=AnimationMethod::PINGPONG;
 }
 
 void Asteroid::Update()
 {
-	if (frameTimeElapsed > std::chrono::seconds(1))
+	if (frameTimeElapsed > std::chrono::milliseconds(500))
 	{
-		if (++currentFrame == texture.Fetch().end()) currentFrame=texture.Fetch().begin();
+		if (std::next(currentFrame) == texture.Fetch().end())
+		{
+			if (std::next(currentFrameReversed) == texture.Fetch().rend())
+			{
+				currentFrame=texture.Fetch().begin();
+				currentFrameReversed=texture.Fetch().rbegin();
+			}
+			else
+			{
+				currentFrameReversed++;
+			}
+		}
+		else
+		{
+			currentFrame++;
+		}
 		frameLastUpdateTime=std::chrono::steady_clock::now();
 	}
 	frameTimeElapsed=std::chrono::steady_clock::now()-frameLastUpdateTime;
@@ -145,12 +166,13 @@ void Asteroid::Update()
 
 void Asteroid::Draw()
 {
+	SDL_Texture *frame=std::next(currentFrame) == texture.Fetch().end() ? *currentFrameReversed : *currentFrame;
 	SDL_Point size;
-	SDL_QueryTexture(*currentFrame,NULL,NULL,&size.x, &size.y);
+	SDL_QueryTexture(frame,NULL,NULL,&size.x, &size.y);
 	int x=50-size.x/2;
 	int y=50-size.y/2;
 	size.x*=5; // TODO: restore original size in production
 	size.y*=5;
 	SDL_Rect destinationRect({x,y,size.x,size.y});
-	SDL_RenderCopyEx(renderer,*currentFrame,nullptr,&destinationRect,0,nullptr,SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer,frame,nullptr,&destinationRect,0,nullptr,SDL_FLIP_NONE);
 }
