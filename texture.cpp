@@ -36,6 +36,11 @@ Texture::Texture(const std::string &name) : name(name)
 	}
 }
 
+Texture::~Texture()
+{
+	for (SDL_Texture *texture : cache.at(name)) SDL_DestroyTexture(texture);
+}
+
 const std::vector<SDL_Texture*>& Texture::Fetch() const
 {
 	return cache.at(name);

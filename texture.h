@@ -13,6 +13,8 @@ class Texture
 {
 public:
 	Texture(const std::string &name);
+	~Texture();
+	Texture(const Texture &other) = delete;
 	const Frames& Fetch() const;
 protected:
 	static std::unordered_map<std::string,Frames> cache;
