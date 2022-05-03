@@ -2,8 +2,23 @@
 #include "actor.h"
 #include "state.h"
 
-Actor::Actor(const std::string &textureName,const State *state) : texture(textureName), state(state)
+Actor::Actor(const std::string &textureName,const State *state) : texture(textureName), state(state), position({0,0}), rotation(0.0f)
 {
+}
+
+const SDL_Point& Actor::Position() const
+{
+	return position;
+}
+
+const int Actor::Rotation() const
+{
+	return rotation;
+}
+
+const SDL_Texture& Actor::Texture() const
+{
+	return *texture.Fetch().front();
 }
 
 Player::Player(const State *state) : Actor("Player Ship",state),
@@ -11,13 +26,19 @@ Player::Player(const State *state) : Actor("Player Ship",state),
 	texture_full_roll_right("Player Ship Full Roll Right"),
 	texture_half_roll_left("Player Ship Half Roll Left"),
 	texture_full_roll_left("Player Ship Full Roll Left"),
-	roll(Roll::NONE),
-	angle(0)
+	roll(Roll::NONE)
 {
 	rollLastUpdateTime=std::chrono::steady_clock::now();
 	rollTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
 	pitchLastUpdateTime=std::chrono::steady_clock::now();
 	pitchTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
+
+	SDL_Point size;
+	SDL_QueryTexture(texture.Fetch().front(),NULL,NULL,&size.x, &size.y);
+	int width=0;
+	int height=0;
+	SDL_GetRendererOutputSize(renderer,&width,&height);
+	position={width/2-size.x/2,height/2-size.y/2};
 }
 
 void Player::DetermineRoll()
@@ -68,7 +89,7 @@ void Player::DetermineRoll()
 
 		if (updateAngle)
 		{
-			angle=angle == 359 ? 0 : angle+=1.0f;
+			rotation=rotation == 359 ? 0 : rotation+=1.0f;
 			pitchLastUpdateTime=std::chrono::steady_clock::now();
 		}
 	}
@@ -83,7 +104,7 @@ void Player::DetermineRoll()
 
 		if (updateAngle)
 		{
-			angle=angle == 0 ? 359 : angle-=1.0f;
+			rotation=rotation == 0 ? 359 : rotation-=1.0f;
 			pitchLastUpdateTime=std::chrono::steady_clock::now();
 		}
 	}
@@ -94,9 +115,9 @@ void Player::Update()
 	DetermineRoll();
 }
 
-void Player::Draw()
+const SDL_Texture& Player::Texture() const
 {
-	Texture *currentTexture=&texture;
+	const class Texture *currentTexture=&texture;
 	switch (roll)
 	{
 	case Roll::NONE:
@@ -119,34 +140,21 @@ void Player::Draw()
 		currentTexture=&texture_full_roll_left;
 		break;
 	}
-	SDL_Point size;
-	SDL_QueryTexture(currentTexture->Fetch().front(),NULL,NULL,&size.x, &size.y);
-	size.x*=3; // TODO: restore original size in production
-	size.y*=3;
-	int width=0;
-	int height=0;
-	SDL_GetRendererOutputSize(renderer,&width,&height);
-	SDL_Rect destinationRect({width/2-size.x/2,height/2-size.y/2,size.x,size.y});
-	SDL_RenderCopyEx(renderer,currentTexture->Fetch().front(),nullptr,&destinationRect,angle,nullptr,SDL_FLIP_NONE);
+	return *currentTexture->Fetch().front();
 }
 
 Asteroid::Asteroid(const State *state) : Actor("DatBoi Asteroid",state), pingPongTexture(texture.Fetch(),std::chrono::milliseconds(200))
 {
+	position={50,50};
+	currentFrame=pingPongTexture();
 }
 
 void Asteroid::Update()
 {
+	currentFrame=pingPongTexture();
 }
 
-void Asteroid::Draw()
+const SDL_Texture& Asteroid::Texture() const
 {
-	SDL_Texture *frame=pingPongTexture();
-	SDL_Point size;
-	SDL_QueryTexture(frame,NULL,NULL,&size.x, &size.y);
-	int x=50-size.x/2;
-	int y=50-size.y/2;
-	size.x*=5; // TODO: restore original size in production
-	size.y*=5;
-	SDL_Rect destinationRect({x,y,size.x,size.y});
-	SDL_RenderCopyEx(renderer,frame,nullptr,&destinationRect,0,nullptr,SDL_FLIP_NONE);
+	return *currentFrame;
 }

@@ -19,6 +19,9 @@ else()
 	add_subdirectory("SDL")
 	add_subdirectory("SDL_image")
 	add_subdirectory("jsoncpp")
+	if(NOT WIN32)
+		target_compile_options(SDL2_image PRIVATE -fPIC)
+	endif()
 endif()
 
 add_executable(Gencore

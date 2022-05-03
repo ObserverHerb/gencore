@@ -9,11 +9,15 @@ class Actor
 {
 public:
 	Actor(const std::string &textureName,const State *state);
-	virtual void Draw()=0;
 	virtual void Update()=0;
+	virtual const SDL_Point& Position() const;
+	virtual const int Rotation() const;
+	virtual const SDL_Texture& Texture() const;
 protected:
-	Texture texture;
+	class Texture texture;
 	const State *state;
+	SDL_Point position;
+	double rotation;
 };
 
 enum class Roll
@@ -33,14 +37,13 @@ public:
 	Player(const State *state);
 	void DetermineRoll();
 	void Update() override;
-	void Draw() override;
+	const SDL_Texture& Texture() const override;
 protected:
-	Texture texture_half_roll_right;
-	Texture texture_full_roll_right;
-	Texture texture_half_roll_left;
-	Texture texture_full_roll_left;
+	class Texture texture_half_roll_right;
+	class Texture texture_full_roll_right;
+	class Texture texture_half_roll_left;
+	class Texture texture_full_roll_left;
 	enum Roll roll;
-	double angle;
 	std::chrono::time_point<std::chrono::steady_clock> rollLastUpdateTime;
 	std::chrono::duration<long long,std::nano> rollTimeElapsed;
 	std::chrono::time_point<std::chrono::steady_clock> pitchLastUpdateTime;
@@ -50,9 +53,10 @@ protected:
 class Asteroid : public Actor
 {
 public:
-	   Asteroid(const State* state);
+	Asteroid(const State* state);
 	void Update() override;
-	void Draw() override;
+	const SDL_Texture& Texture() const override;
 protected:
 	Animation::PingPongAdapter pingPongTexture;
+	SDL_Texture *currentFrame;
 };
