@@ -33,12 +33,7 @@ Player::Player(const State *state) : Actor("Player Ship",state),
 	pitchLastUpdateTime=std::chrono::steady_clock::now();
 	pitchTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
 
-	SDL_Point size;
-	SDL_QueryTexture(texture.Fetch().front(),NULL,NULL,&size.x, &size.y);
-	int width=0;
-	int height=0;
-	SDL_GetRendererOutputSize(renderer,&width,&height);
-	position={width/2-size.x/2,height/2-size.y/2};
+	position={0,0};
 }
 
 void Player::DetermineRoll()

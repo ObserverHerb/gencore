@@ -12,7 +12,6 @@ public:
 	SDL_Point center;
 	SDL_Point Translate(SDL_Point point);
 	void Pin(const Actor &actor);
-	void Update();
 protected:
 	std::optional<const Actor*> pin;
 };
