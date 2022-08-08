@@ -1,20 +1,9 @@
 #pragma once
 #include <SDL.h>
-#include <optional>
+#include "render.h"
 #include "actor.h"
 
 using Keys=std::unordered_map<SDL_Keycode,bool>;
-
-class Viewport
-{
-public:
-	Viewport() : center({0,0}) { }
-	SDL_Point center;
-	SDL_Point Translate(SDL_Point point);
-	void Pin(const Actor &actor);
-protected:
-	std::optional<const Actor*> pin;
-};
 
 class State
 {

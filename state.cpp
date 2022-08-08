@@ -1,29 +1,6 @@
 #include "state.h"
 #include "global.h"
 
-SDL_Point Viewport::Translate(SDL_Point point)
-{
-	int width=0;
-	int height=0;
-	SDL_GetRendererOutputSize(renderer,&width,&height); // TODO: can the number of calls to this be reduced?
-	if (pin)
-	{
-		point.x=point.x-(*pin)->Position().x+width/2;
-		point.y=point.y-(*pin)->Position().y+height/2;
-	}
-	else
-	{
-		point.x-=center.x-width/2; // NOTE: can we flip this during the last mile so rest of system can assume top right quadrant is +,+?
-		point.y+=center.y+height/2;
-	}
-	return point;
-}
-
-void Viewport::Pin(const Actor &actor)
-{
-	pin=&actor;
-}
-
 State::State()
 {
 	keys[SDLK_RIGHT]=false;
