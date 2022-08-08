@@ -25,8 +25,15 @@ const Keys& State::Keys() const
 TestState::TestState() : State(), player(this), asteroid(50,50,this)
 {
 	actors.push_back(&player);
-	viewport.Pin(player);
+	//viewport.Pin(player);
 	actors.push_back(&asteroid);
+	Asteroid *asteroid=new Asteroid(-50,50,this);
+	actors.push_back(asteroid);
+	asteroid=new Asteroid(-50,-50,this);
+	//viewport.Pin(asteroid);
+	actors.push_back(asteroid);
+	asteroid=new Asteroid(50,-50,this);
+	actors.push_back(asteroid);
 }
 
 void TestState::Update()
