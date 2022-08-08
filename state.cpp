@@ -1,5 +1,5 @@
 #include "state.h"
-#include "globals.h"
+#include "global.h"
 
 SDL_Point Viewport::Translate(SDL_Point point)
 {

@@ -25,7 +25,7 @@ else()
 endif()
 
 add_executable(Gencore
-	globals.h
+	global.h
 	texture.h
 	texture.cpp
 	actor.h

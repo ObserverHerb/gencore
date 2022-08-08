@@ -1,4 +1,4 @@
-#include "globals.h"
+#include "global.h"
 #include "actor.h"
 #include "state.h"
 

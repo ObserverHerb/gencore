@@ -1,5 +1,5 @@
 #include <fstream>
-#include "globals.h"
+#include "global.h"
 #include "texture.h"
 
 Texture::Texture(const std::string &name) : name(name)

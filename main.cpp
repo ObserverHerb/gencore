@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <unordered_map>
 #include <string>
-#include "globals.h"
+#include "global.h"
 #include "state.h"
 
 class Game
