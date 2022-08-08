@@ -26,6 +26,8 @@ endif()
 
 add_executable(Gencore
 	global.h
+	concept.h
+	interface.h
 	texture.h
 	texture.cpp
 	actor.h

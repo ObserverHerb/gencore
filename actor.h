@@ -2,17 +2,18 @@
 
 #include <chrono>
 #include "texture.h"
+#include "interface.h"
 
 class State;
 
-class Actor
+class Actor : public Interface::Drawable,public Interface::Movable
 {
 public:
 	Actor(const std::string &textureName,const State *state);
 	virtual void Update()=0;
-	virtual const SDL_Point& Position() const;
-	virtual const int Rotation() const;
-	virtual const SDL_Texture& Texture() const;
+	const SDL_Point& Position() const override;
+	const int Rotation() const override;
+	const SDL_Texture& Texture() const override;
 protected:
 	class Texture texture;
 	const State *state;
@@ -53,7 +54,7 @@ protected:
 class Asteroid : public Actor
 {
 public:
-	Asteroid(const State* state);
+	Asteroid(int x,int y,const State* state);
 	void Update() override;
 	const SDL_Texture& Texture() const override;
 protected:

@@ -138,9 +138,9 @@ const SDL_Texture& Player::Texture() const
 	return *currentTexture->Fetch().front();
 }
 
-Asteroid::Asteroid(const State *state) : Actor("DatBoi Asteroid",state), pingPongTexture(texture.Fetch(),std::chrono::milliseconds(200))
+Asteroid::Asteroid(int x,int y,const State *state) : Actor("DatBoi Asteroid",state), pingPongTexture(texture.Fetch(),std::chrono::milliseconds(200))
 {
-	position={50,50};
+	position={x,y};
 	currentFrame=pingPongTexture();
 }
 

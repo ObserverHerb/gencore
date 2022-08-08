@@ -27,11 +27,6 @@ public:
 		SDL_Event event;
 		while (live)
 		{
-			SDL_SetRenderDrawColor(renderer,0,0,0,0);
-			SDL_RenderClear(renderer);
-			Draw();
-			SDL_RenderPresent(renderer);
-
 			if (SDL_PollEvent(&event))
 			{
 				switch (event.type)
@@ -65,6 +60,7 @@ public:
 			}
 
 			Update();
+			Draw();
 		}
 	}
 protected:
