@@ -3,6 +3,7 @@
 #include <chrono>
 #include "texture.h"
 #include "interface.h"
+#include "global.h"
 
 // FIXME: put me somewhere that makes sense
 struct Position
@@ -26,9 +27,8 @@ protected:
 	const State *state;
 	struct Position position;
 	double rotation;
-	std::chrono::milliseconds movementTimeThreshold;
-	std::chrono::time_point<std::chrono::steady_clock> movementLastUpdateTime;
-	std::chrono::duration<long long,std::nano> movementTimeElapsed;
+	Measurements::Speed speed;
+	Time::Timestamp movementTimestamp;
 };
 
 enum class Roll

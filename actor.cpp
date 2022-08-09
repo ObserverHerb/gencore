@@ -1,4 +1,3 @@
-#include "global.h"
 #include "actor.h"
 #include "state.h"
 
@@ -35,9 +34,8 @@ Player::Player(const State *state) : Actor("Player Ship",state),
 	pitchLastUpdateTime=std::chrono::steady_clock::now();
 	pitchTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
 
-	movementTimeThreshold=std::chrono::milliseconds(50);
-	movementTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
-	movementLastUpdateTime=std::chrono::steady_clock::now();
+	movementTimestamp=std::chrono::steady_clock::now();
+	speed=Convert::Speed<std::chrono::milliseconds>(1,std::chrono::milliseconds(50));
 
 	position={100,100};
 }
@@ -113,13 +111,9 @@ void Player::DetermineRoll()
 
 void Player::DeterminePosition()
 {
-	movementTimeElapsed=std::chrono::steady_clock::now()-movementLastUpdateTime;
-	if (movementTimeElapsed > movementTimeThreshold)
-	{
-		position.x+=std::sin((rotation*std::numbers::pi)/180);
-		position.y+=std::cos((rotation*std::numbers::pi)/180);
-		movementLastUpdateTime=std::chrono::steady_clock::now();
-	}
+	double distance=Convert::Distance(speed,Time::Capture(movementTimestamp));
+	position.x+=std::sin(rotation)*distance;
+	position.y+=std::cos(rotation)*distance;
 }
 
 void Player::Update()
