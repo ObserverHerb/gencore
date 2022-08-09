@@ -4,6 +4,13 @@
 #include "texture.h"
 #include "interface.h"
 
+// FIXME: put me somewhere that makes sense
+struct Position
+{
+	double x;
+	double y;
+};
+
 class State;
 
 class Actor : public Interface::Drawable,public Interface::Movable
@@ -11,14 +18,17 @@ class Actor : public Interface::Drawable,public Interface::Movable
 public:
 	Actor(const std::string &textureName,const State *state);
 	virtual void Update()=0;
-	const SDL_Point& Position() const override;
+	SDL_Point Position() const override;
 	const int Rotation() const override;
 	const SDL_Texture& Texture() const override;
 protected:
 	class Texture texture;
 	const State *state;
-	SDL_Point position;
+	struct Position position;
 	double rotation;
+	std::chrono::milliseconds movementTimeThreshold;
+	std::chrono::time_point<std::chrono::steady_clock> movementLastUpdateTime;
+	std::chrono::duration<long long,std::nano> movementTimeElapsed;
 };
 
 enum class Roll
@@ -37,6 +47,7 @@ class Player : public Actor
 public:
 	Player(const State *state);
 	void DetermineRoll();
+	void DeterminePosition();
 	void Update() override;
 	const SDL_Texture& Texture() const override;
 protected:

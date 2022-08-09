@@ -2,13 +2,15 @@
 #include "actor.h"
 #include "state.h"
 
+#include <cmath>
+
 Actor::Actor(const std::string &textureName,const State *state) : texture(textureName), state(state), position({0,0}), rotation(0.0f)
 {
 }
 
-const SDL_Point& Actor::Position() const
+SDL_Point Actor::Position() const
 {
-	return position;
+	return {static_cast<int>(std::lround(position.x)),static_cast<int>(std::lround(position.y))}; // TODO: how big of a deal are rounding errors here?
 }
 
 const int Actor::Rotation() const
@@ -33,7 +35,11 @@ Player::Player(const State *state) : Actor("Player Ship",state),
 	pitchLastUpdateTime=std::chrono::steady_clock::now();
 	pitchTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
 
-	position={0,0};
+	movementTimeThreshold=std::chrono::milliseconds(50);
+	movementTimeElapsed=std::chrono::duration<long long,std::nano>::zero();
+	movementLastUpdateTime=std::chrono::steady_clock::now();
+
+	position={100,100};
 }
 
 void Player::DetermineRoll()
@@ -105,9 +111,21 @@ void Player::DetermineRoll()
 	}
 }
 
+void Player::DeterminePosition()
+{
+	movementTimeElapsed=std::chrono::steady_clock::now()-movementLastUpdateTime;
+	if (movementTimeElapsed > movementTimeThreshold)
+	{
+		position.x+=std::sin((rotation*std::numbers::pi)/180);
+		position.y+=std::cos((rotation*std::numbers::pi)/180);
+		movementLastUpdateTime=std::chrono::steady_clock::now();
+	}
+}
+
 void Player::Update()
 {
 	DetermineRoll();
+	DeterminePosition();
 }
 
 const SDL_Texture& Player::Texture() const

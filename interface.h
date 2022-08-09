@@ -12,6 +12,6 @@ namespace Interface
 	class Movable
 	{
 	public:
-		virtual const SDL_Point& Position() const=0;
+		virtual SDL_Point Position() const=0;
 	};
 }
