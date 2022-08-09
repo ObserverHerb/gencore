@@ -28,6 +28,7 @@ protected:
 	struct Position position;
 	double rotation;
 	Measurements::Speed speed;
+	Measurements::Speed acceleration;
 	Time::Timestamp movementTimestamp;
 };
 

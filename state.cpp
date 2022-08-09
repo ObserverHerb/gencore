@@ -5,6 +5,8 @@ State::State()
 {
 	keys[SDLK_RIGHT]=false; // TODO: change to initializer list
 	keys[SDLK_LEFT]=false;
+	keys[SDLK_UP]=false;
+	keys[SDLK_DOWN]=false;
 }
 
 void State::KeyDown(SDL_Keycode key)

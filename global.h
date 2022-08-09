@@ -17,6 +17,8 @@ inline bool InitializeImageSubsystem()
 namespace Measurements
 {
 	using Speed=double;
+	using Acceleration=double;
+	using Distance=double;
 	using Radians=double;
 	using Degrees=double;
 }
@@ -37,9 +39,15 @@ namespace Time
 
 namespace Convert
 {
-	template <typename T> inline Measurements::Speed Speed(Measurements::Speed distance,T time) requires std::convertible_to<T,Time::Interval>
+	template <typename T> inline Measurements::Speed Speed(Measurements::Distance distance,T time) requires std::convertible_to<T,Time::Interval>
 	{
 		return distance/std::chrono::duration_cast<Time::Interval>(time).count();
+	}
+
+	template <typename T> inline Measurements::Acceleration Acceleration(Measurements::Distance distance,T time) requires std::convertible_to<T,Time::Interval>
+	{
+		long long nanoseconds=std::chrono::duration_cast<Time::Interval>(time).count();
+		return distance/(nanoseconds*nanoseconds);
 	}
 
 	inline Measurements::Speed Distance(Measurements::Speed speed,Time::Interval time)

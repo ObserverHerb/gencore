@@ -32,26 +32,10 @@ public:
 				switch (event.type)
 				{
 				case SDL_KEYDOWN:
-					switch (event.key.keysym.sym)
-					{
-					case SDLK_RIGHT:
-						state->KeyDown(SDLK_RIGHT);
-						break;
-					case SDLK_LEFT:
-						state->KeyDown(SDLK_LEFT);
-						break;
-					}
+					state->KeyDown(event.key.keysym.sym);
 					break;
 				case SDL_KEYUP:
-					switch (event.key.keysym.sym)
-					{
-					case SDLK_RIGHT:
-						state->KeyUp(SDLK_RIGHT);
-						break;
-					case SDLK_LEFT:
-						state->KeyUp(SDLK_LEFT);
-						break;
-					}
+					state->KeyUp(event.key.keysym.sym);
 					break;
 				case SDL_QUIT:
 					SDL_Quit();

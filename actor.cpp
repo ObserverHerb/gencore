@@ -36,6 +36,7 @@ Player::Player(const State *state) : Actor("Player Ship",state),
 
 	movementTimestamp=std::chrono::steady_clock::now();
 	speed=Convert::Speed<std::chrono::milliseconds>(1,std::chrono::milliseconds(50));
+	acceleration=Convert::Acceleration<std::chrono::milliseconds>(1,std::chrono::milliseconds(50));
 
 	position={100,100};
 }
@@ -111,9 +112,22 @@ void Player::DetermineRoll()
 
 void Player::DeterminePosition()
 {
-	double distance=Convert::Distance(speed,Time::Capture(movementTimestamp));
-	position.x+=std::sin(rotation)*distance;
-	position.y+=std::cos(rotation)*distance;
+	Time::Interval elapsed=Time::Capture(movementTimestamp);
+
+	if (state->Keys().at(SDLK_UP))
+	{
+		speed+=acceleration*elapsed.count();
+	}
+
+	if (state->Keys().at(SDLK_DOWN))
+	{
+		speed+=(acceleration*-1)*elapsed.count();
+		if (speed < 0) speed=0;
+	}
+
+	double distance=Convert::Distance(speed,elapsed);
+	position.x+=std::sin(Convert::Radians(rotation))*distance;
+	position.y+=std::cos(Convert::Radians(rotation))*distance;
 }
 
 void Player::Update()

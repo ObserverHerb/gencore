@@ -51,14 +51,14 @@ Json::Value Texture::filenames;
 
 namespace Animation
 {
-	Adapter::Adapter::Adapter(const Frames& frames, const Animation::Interval& interval) : frames(frames), interval(interval)
+	Adapter::Adapter::Adapter(const Frames& frames, const Time::Interval& interval) : frames(frames), interval(interval)
 	{
 		current=frames.cbegin();
 	}
 
 	SDL_Texture* LoopAdapter::operator()()
 	{
-		Interval elapsed=std::chrono::steady_clock::now()-lastUpdate;
+		Time::Interval elapsed=std::chrono::steady_clock::now()-lastUpdate;
 		if (elapsed > interval)
 		{
 			if (++current == frames.cend()) current=frames.cbegin();
@@ -68,14 +68,14 @@ namespace Animation
 		return *current;
 	}
 
-	PingPongAdapter::PingPongAdapter(const Frames &frames,const Interval &interval) : Adapter(frames,interval)
+	PingPongAdapter::PingPongAdapter(const Frames &frames,const Time::Interval &interval) : Adapter(frames,interval)
 	{
 		currentReverse=frames.crbegin();
 	}
 
 	SDL_Texture* PingPongAdapter::operator()()
 	{
-		Interval elapsed=std::chrono::steady_clock::now()-lastUpdate;
+		Time::Interval elapsed=std::chrono::steady_clock::now()-lastUpdate;
 		Frames::const_iterator nextForward=std::next(current);
 		Frames::const_reverse_iterator nextReverse=std::next(currentReverse);
 		if (elapsed > interval)
