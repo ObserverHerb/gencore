@@ -3,7 +3,7 @@
 
 State::State()
 {
-	keys[SDLK_RIGHT]=false;
+	keys[SDLK_RIGHT]=false; // TODO: change to initializer list
 	keys[SDLK_LEFT]=false;
 }
 
@@ -19,7 +19,7 @@ void State::KeyUp(SDL_Keycode key)
 
 const Keys& State::Keys() const
 {
-	return keys;
+	return keys; // FIXME: protect access to this so we're not trying to retieve keys that haven't been initialized in State constructor
 }
 
 TestState::TestState() : State(), player(this), asteroid(50,50,this)
