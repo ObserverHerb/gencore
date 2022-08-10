@@ -1,6 +1,5 @@
 #pragma once
 
-#include <chrono>
 #include "texture.h"
 #include "interface.h"
 #include "global.h"
