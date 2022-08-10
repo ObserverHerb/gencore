@@ -4,13 +4,6 @@
 #include "interface.h"
 #include "global.h"
 
-// FIXME: put me somewhere that makes sense
-struct Position
-{
-	double x;
-	double y;
-};
-
 class State;
 
 class Actor : public Interface::Drawable,public Interface::Movable

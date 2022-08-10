@@ -33,6 +33,8 @@ add_executable(Gencore
 	texture.cpp
 	actor.h
 	actor.cpp
+	plane.h
+	plane.cpp
 	render.h
 	render.cpp
 	state.h

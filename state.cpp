@@ -47,6 +47,7 @@ void TestState::Update()
 void TestState::Present()
 {
 	Render render;
+	for (const Star *star : starfield.Stars()) render.Draw(viewport,star);
 	for (const Actor *actor : actors) render.Draw(viewport,actor);
 	render.Flip();
 }

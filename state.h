@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include "render.h"
 #include "actor.h"
+#include "plane.h"
 
 using Keys=std::unordered_map<SDL_Keycode,bool>;
 
@@ -28,5 +29,6 @@ public:
 protected:
 	Player player;
 	Asteroid asteroid;
+	Starfield starfield;
 	std::vector<Actor*> actors;
 };

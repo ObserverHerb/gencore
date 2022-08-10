@@ -14,6 +14,13 @@ inline bool InitializeImageSubsystem()
 	return true;
 }
 
+// FIXME: put me somewhere that makes sense
+struct Position
+{
+	double x;
+	double y;
+};
+
 namespace Measurements
 {
 	using Speed=double;
