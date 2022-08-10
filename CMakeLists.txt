@@ -7,6 +7,7 @@ option(USE_SYSTEM_LIBS "Link against system SDL2 and JsonCpp" OFF)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS_DEBUG "-pg")
 
 if(USE_SYSTEM_LIBS)
 	find_package(PkgConfig REQUIRED)
