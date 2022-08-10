@@ -24,7 +24,7 @@ public:
 	}
 	void Loop()
 	{
-		SDL_Event event;
+		SDL_Event event={0};
 		while (live)
 		{
 			while (SDL_PollEvent(&event))
@@ -41,6 +41,7 @@ public:
 					SDL_Quit();
 					return;
 				}
+				event={0};
 			}
 
 			Update();
