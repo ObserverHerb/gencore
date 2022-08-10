@@ -27,7 +27,7 @@ public:
 		SDL_Event event;
 		while (live)
 		{
-			if (SDL_PollEvent(&event))
+			while (SDL_PollEvent(&event))
 			{
 				switch (event.type)
 				{
