@@ -32,9 +32,7 @@ Viewport::Viewport() : position({0,0})
 
 WorldPoint Viewport::Origin() const
 {
-	if (pin) return {(*pin)->Position().x-width/2,(*pin)->Position().y-height/2};
-
-	return {position.x-width/2,position.y-height/2};
+	return origin;
 }
 
 ViewPoint Viewport::Translate(WorldPoint point) const
@@ -62,4 +60,12 @@ ScreenPoint Viewport::Screen(ViewPoint point) const
 void Viewport::Unpin()
 {
 	pin.reset();
+}
+
+void Viewport::Update()
+{
+	if (pin)
+		origin={(*pin)->Position().x-width/2,(*pin)->Position().y-height/2};
+	else
+		origin={position.x-width/2,position.y-height/2};
 }

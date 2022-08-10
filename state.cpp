@@ -41,6 +41,7 @@ TestState::TestState() : State(), player(this), asteroid(50,50,this)
 void TestState::Update()
 {
 	for (Actor *actor : actors) actor->Update();
+	viewport.Update();
 }
 
 void TestState::Present()

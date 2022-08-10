@@ -17,9 +17,11 @@ public:
 	ViewPoint Translate(WorldPoint point) const; // convert a point in world coordinates to viewport coordinates
 	ScreenPoint Screen(ViewPoint point) const; // convert a point in viewport coordinates to screen coordinates
 	void Unpin();
+	void Update();
 protected:
 	int width;
 	int height;
+	WorldPoint origin;
 	WorldPoint position; // where the center of the viewport lands in world coordinates
 	std::optional<const Interface::Movable*> pin;
 
